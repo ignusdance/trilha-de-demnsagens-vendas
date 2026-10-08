@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trilha de Mensagens 2.0 · Vendas · Ignus Dance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pink:#E6007A;
+    --pink-deep:#AD0060;
+    --pink-soft:#FFE3F1;
+    --ink:#1B1420;
+    --paper:#FFF9FC;
+    --card:#FFFFFF;
+    --purple:#8B5FBF;
+    --purple-soft:#F1E9FB;
+    --muted:#7A7280;
+    --line:#F0DCE9;
+    --green-ok:#1FAE6E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Space Grotesk',sans-serif; }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:var(--ink);
+    color:#fff;
+    padding:14px 18px 12px;
+  }
+  .topbar-row{
+    display:flex; align-items:center; justify-content:space-between;
+    max-width:920px; margin:0 auto;
+    gap:12px;
+  }
+  .brand{ display:flex; flex-direction:column; line-height:1.1; }
+  .brand .eyebrow{
+    font-size:10px; letter-spacing:.14em; color:var(--pink);
+    font-weight:700; text-transform:uppercase;
+  }
+  .brand h1{ font-size:19px; margin:2px 0 0; font-weight:700; }
+
+  .study-toggle{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; color:#D8CFE0; white-space:nowrap;
+  }
+  .switch{
+    width:38px; height:22px; border-radius:20px; background:#3A2E42;
+    position:relative; cursor:pointer; flex-shrink:0;
+    border:1px solid #55455F;
+  }
+  .switch .knob{
+    position:absolute; top:2px; left:2px; width:16px; height:16px;
+    border-radius:50%; background:#D8CFE0; transition:transform .18s ease;
+  }
+  .switch.on{ background:var(--pink); border-color:var(--pink);}
+  .switch.on .knob{ transform:translateX(16px); background:#fff; }
+
+  .search-wrap{ max-width:920px; margin:12px auto 0; position:relative; }
+  .search-wrap input{
+    width:100%; padding:11px 14px 11px 38px;
+    border-radius:12px; border:none; outline:none;
+    background:#2A222F; color:#fff; font-size:14px; font-family:'Inter',sans-serif;
+  }
+  .search-wrap input::placeholder{ color:#9C90A6; }
+  .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); }
+
+  .chips{
+    max-width:920px; margin:12px auto 0; display:flex; gap:8px;
+    overflow-x:auto; padding-bottom:2px; scrollbar-width:none;
+  }
+  .chips::-webkit-scrollbar{ display:none; }
+  .chip{
+    flex-shrink:0; padding:7px 14px; border-radius:999px;
+    background:#2A222F; color:#D8CFE0; font-size:13px; font-weight:600;
+    cursor:pointer; border:1px solid transparent; transition:.15s;
+    white-space:nowrap;
+  }
+  .chip.active{ background:var(--pink); color:#fff; }
+  .chips.sub{ margin-top:8px; }
+  .chips.sub:empty{ display:none; }
+  .chips.sub .chip{ background:#1F1824; font-size:12px; padding:5px 12px; border-color:#3A2E42; }
+  .chips.sub .chip.active{ background:var(--purple); border-color:var(--purple); color:#fff; }
+
+  /* ---------- Body ---------- */
+  .wrap{ max-width:920px; margin:0 auto; padding:20px 16px 80px; }
+
+  .counter{
+    display:flex; align-items:center; gap:8px;
+    font-size:12px; color:var(--muted); margin:0 0 18px;
+  }
+  .counter b{ color:var(--pink-deep); font-family:'Space Grotesk',sans-serif; font-size:14px;}
+
+  .section{ margin-bottom:34px; }
+  .section-head{
+    display:flex; align-items:center; gap:10px; margin-bottom:14px;
+  }
+  .section-head .icon{
+    width:34px; height:34px; border-radius:10px;
+    background:var(--pink-soft); display:flex; align-items:center; justify-content:center;
+    font-size:17px; flex-shrink:0;
+  }
+  .section-head h2{ font-size:16px; margin:0; letter-spacing:.01em; }
+  .section-head .count{ font-size:12px; color:var(--muted); }
+
+  .intro{
+    background:var(--purple-soft); border-radius:14px; padding:12px 14px;
+    font-size:13px; line-height:1.5; margin-bottom:14px; color:#3B2D52;
+  }
+
+  .group-head{
+    margin:22px 0 12px; padding-left:12px; border-left:4px solid var(--pink);
+  }
+  .group-head h3{ font-size:15px; margin:0; }
+  .group-head p{ font-size:12.5px; color:var(--muted); margin:4px 0 0; line-height:1.45; }
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:14px 14px 12px; margin-bottom:12px;
+    box-shadow:0 1px 2px rgba(27,20,32,.03);
+  }
+  .card-top{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:8px;
+    margin-bottom:10px;
+  }
+  .card-title{
+    font-size:13px; font-weight:700; color:var(--pink-deep);
+    margin:0; text-transform:uppercase; letter-spacing:.03em; line-height:1.35;
+  }
+  .tag{
+    flex-shrink:0; font-size:10.5px; font-weight:700; color:var(--purple);
+    background:var(--purple-soft); padding:3px 9px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .note{
+    font-size:12.5px; color:var(--muted); font-style:italic;
+    margin:-2px 0 12px; padding-bottom:10px; border-bottom:1px dashed var(--line);
+    line-height:1.45;
+  }
+
+  .bubble-row{ display:flex; justify-content:flex-end; margin-bottom:8px; }
+  .bubble-row:last-child{ margin-bottom:0; }
+  .bubble{
+    position:relative;
+    max-width:88%;
+    background:linear-gradient(135deg,var(--pink) 0%,var(--pink-deep) 100%);
+    color:#fff; padding:10px 22px 10px 14px; border-radius:14px 14px 3px 14px;
+    font-size:14px; line-height:1.5; white-space:pre-wrap;
+    cursor:pointer;
+    transition:transform .12s ease;
+    margin-top:6px;
+  }
+  .bubble:active{ transform:scale(.985); }
+  .placeholder{
+    background:rgba(255,255,255,.28);
+    padding:1px 6px; border-radius:6px; font-weight:700;
+    font-family:'Space Grotesk',sans-serif; font-size:12.5px;
+  }
+  .copy-fab{
+    position:absolute; top:-9px; right:-9px;
+    width:26px; height:26px; border-radius:50%;
+    background:#fff; border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 2px 5px rgba(27,20,32,.15);
+    cursor:pointer;
+  }
+  .copy-fab svg{ width:13px; height:13px; }
+  .copy-fab.done{ background:var(--green-ok); border-color:var(--green-ok); }
+
+  /* study mode */
+  .study .bubble:not(.revealed){
+    color:transparent; text-shadow:0 0 9px rgba(255,255,255,.9);
+    background:repeating-linear-gradient(135deg,var(--purple),var(--purple) 8px,#9E72CE 8px,#9E72CE 16px);
+  }
+  .study .bubble:not(.revealed)::after{
+    content:'Toque para revelar'; position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size:12px; font-weight:700; text-shadow:none;
+    background:rgba(0,0,0,.18); border-radius:inherit;
+  }
+  .study .copy-fab{ display:none; }
+  .study .bubble.revealed .copy-fab{ display:flex; }
+  .study .bubble.revealed::after{ content:none; }
+
+  .toast{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(20px);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px;
+    font-size:13px; font-weight:600; opacity:0; pointer-events:none;
+    transition:all .22s ease; display:flex; align-items:center; gap:8px; z-index:60;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .empty{ text-align:center; padding:50px 20px; color:var(--muted); }
+  .empty .big{ font-size:34px; margin-bottom:8px; }
+
+  @media (max-width:480px){
+    .brand h1{ font-size:16px; }
+    .study-toggle{ font-size:11px; }
+    .card-top{ flex-direction:column; gap:6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <span class="eyebrow">Ignus Dance · Vendas</span>
+      <h1>Trilha de Mensagens 2.0</h1>
+    </div>
+    <div class="study-toggle">
+      <span id="studyLabel">Modo Estudo</span>
+      <div class="switch" id="studySwitch" onclick="toggleStudy()"><div class="knob"></div></div>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9C90A6" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search" type="text" placeholder="Buscar palavra-chave, ex: tá caro, sem tempo, link, isenção..." oninput="renderAll()">
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="chips sub" id="subchips"></div>
+</div>
+
+<div class="wrap">
+  <div class="counter">📋 Mensagens copiadas nesta sessão: <b id="copyCount">0</b></div>
+  <div id="content"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = [
+
+  /* =====================================================
+     1. FEEDBACK PÓS-AULA
+  ===================================================== */
+  {
+    id: "feedback", icon: "💬", title: "Feedback pós-aula",
+    intro: "Enviar em até 1 a 2 horas depois da aula experimental. Antes, o professor passa 3 informações para quem vai enviar: o nome da pessoa, um destaque específico dela e como ela saiu da aula (animada, tímida, cansada). O destaque sempre vem do professor, nunca invente.",
+    groups: [{ title: null, items: [
+      { title: "Padrão: elogio do professor", tag: "Afeição · Autoridade",
+        note: "Use como padrão para a maioria dos alunos.",
+        bubbles: [
+`Oii [nome], tudo bem? 💜 Aqui é a [seu nome] da Ignus. Acabei de falar com o [professor + nome] e ele comentou que você [destaque: mandou bem na aula de (ontem - hoje) / já estava mandando muito bem no final da aula]! 🔥 Como foi a experiência pra você?`
+        ]},
+      { title: "Aluna descontraída: corpo e saudade", tag: "Compromisso e Coerência",
+        note: "Para quem saiu mais solta e bem-humorada. A resposta dela vira a ponte para a proposta.",
+        bubbles: [
+`Oii [nome]! 💜 Aqui é a [seu nome] da Ignus. Como ficou o corpo depois da aula? Sentiu alguma dorzinha ou era só saudade de dançar de novo mesmo? 😅`
+        ]},
+      { title: "Aprovação social: a turma adorou", tag: "Aprovação social · Unidade",
+        note: "Para quem veio tímida ou em turma cheia. Só use se o professor confirmou que o grupo realmente reagiu bem.",
+        bubbles: [
+`Oii [nome]! 💜 Passando pra dizer que o pessoal do(a) [modalidade] adorou te receber hoje! [Professor] comentou que o grupo já perguntou se você vai voltar 😄 Como foi pra você?`
+        ]},
+      { title: "Vídeo de presente", tag: "Reciprocidade · Afeição",
+        note: "Para quem foi muito bem. Peça autorização para gravar antes da aula e anexe o vídeo na mensagem.",
+        bubbles: [
+`Oii [nome]! 💜 Separei um presentinho pra você: um vídeo de [10s] seu na aula de hoje 🔥 Ficou muito bom! Como foi a experiência?`
+        ]},
+      { title: "Condição especial com prazo", tag: "Escassez",
+        note: "Para quem saiu animada. Só use se o prazo for real.",
+        bubbles: [
+`Oii [nome]! 💜 Foi muito bom ter você na [modalidade] hoje! [destaque do professor]. Como a turma tem vagas limitadas, vou deixar uma condição especial de matrícula reservada pra você até [data]. Posso te explicar como funciona? ✨`
+        ]}
+    ]}]
+  },
+
+  /* =====================================================
+     2. FOLLOW-UP
+  ===================================================== */
+  {
+    id: "followup", icon: "🔁", title: "Follow-up",
+    intro: "Para quem não respondeu o feedback. Máximo de 3 toques, cada um com um ângulo diferente. Se a pessoa responder em qualquer momento, a sequência para e a conversa segue normal.",
+    groups: [{ title: null, items: [
+      { title: "Toque 1 · Dia seguinte, de manhã", tag: "Afeição",
+        note: "Assunto natural e fácil de responder, sem cobrança.",
+        bubbles: [
+`Bom dia [nome]! ☀️ Passando rapidinho pra saber como o corpo acordou hoje depois da aula de ontem 😊`
+        ]},
+      { title: "Toque 2 · Dia 3, com presente", tag: "Reciprocidade · Unidade",
+        note: "Anexe um vídeo curto da turma (10 a 15 segundos), gravado pelos professores durante a semana.",
+        bubbles: [
+`Oi [nome]! 🔥 Lembrei de você quando vi esse trecho da turma de [modalidade] essa semana, olha a energia 💜`
+        ]},
+      { title: "Toque 3 · Dia 5, se você usou a condição especial", tag: "Escassez",
+        note: "Só funciona se a condição vence mesmo na data. Não estenda o prazo.",
+        bubbles: [
+`Oi [nome]! 💜 Passando pra avisar que a condição especial de matrícula que reservei pra você encerra [amanhã/hoje]. Quer que eu te explique como funciona? ✨`
+        ]},
+      { title: "Toque 3 · Dia 5, se não usou a condição especial", tag: "Escassez",
+        note: "Use o mesmo gatilho, com as vagas da turma.",
+        bubbles: [
+`Oi [nome]! 💜 A turma de [modalidade] de [dia] está com Vagas Limitadas essa semana. Posso te explicar as opções de plano? ✨`
+        ]}
+    ]}]
+  },
+
+  /* =====================================================
+     3. APRESENTAÇÃO DOS PLANOS
+  ===================================================== */
+  {
+    id: "planos", icon: "💰", title: "Apresentação dos planos",
+    intro: "Cada traço é uma mensagem separada. A isenção da taxa de matrícula (R$20,00) entra na segunda mensagem, antes da pergunta final. Ela vale até o final do dia da aula experimental. Se não deu para falar com a pessoa (ficou tarde, por exemplo), vale até o final do dia do contato.",
+    groups: [{ title: null, items: [
+      { title: "Versão 1 · Trimestral e Semestral", tag: "Contraste · Escassez",
+        note: "Resposta direta a um pedido de valores.",
+        bubbles: [
+`Claro! Vou te enviar por aqui os nossos planos Trimestral e Semestral, pensados para quem quer manter a constância nas aulas e aproveitar um valor mais vantajoso.
+
+🐦‍🔥 Plano Fênix (Semestral)
+• 1x semana: 6x de R$198,00
+• 2x semana: 6x de R$265,33
+
+🔥 Plano Fogo (Trimestral)
+• 1x semana: 3x de R$215,00
+• 2x semana: 3x de R$285,00
+
+Também existe a opção Mensal, caso prefira, mas os planos acabam ficando bem mais vantajosos ao longo do tempo 💜`,
+`Aproveitando, fechando a matrícula hoje você fica isenta da taxa de matrícula (R$20,00) 🔥
+
+Nesse momento qual faz mais sentido pra você? ✨`
+        ]},
+      { title: "Versão 2 · Planos por modalidade", tag: "Contraste · Escassez",
+        note: "Apresentação quando você conduz a conversa.",
+        bubbles: [
+`Hoje a gente trabalha com planos por modalidade que se adaptam à sua rotina:
+
+🐦‍🔥 Plano Fênix (Semestral)
+• 1x semana: 6x de R$198,00
+• 2x semana: 6x de R$265,33
+
+🔥 Plano Fogo (Trimestral)
+• 1x semana: 3x de R$215,00
+• 2x semana: 3x de R$285,00
+
+Também existe a opção Mensal, caso prefira, mas os planos acabam ficando bem mais vantajosos ao longo do tempo 💜`,
+`Aproveitando, fechando a matrícula hoje você fica isenta da taxa de matrícula (R$20,00) 🔥
+
+Nesse momento qual faz mais sentido pra você? ✨`
+        ]},
+      { title: "Versão 3 · Plano Mensal", tag: "Opção sem fidelidade",
+        note: "Quando a pessoa pergunta pelo Mensal.",
+        bubbles: [
+`Existe sim a possibilidade do Plano Mensal
+
+Plano Mensal ✨
+
+• 1x na semana: R$260,00
+• 2x na semana: R$330,00`,
+`Ele faz mais sentido para você nesse momento?`
+        ]}
+    ]}]
+  },
+
+  /* =====================================================
+     4. FECHAMENTO
+  ===================================================== */
+  {
+    id: "fechamento", icon: "✅", title: "Fechamento",
+    intro: "O pagamento é sempre pelo link do NextFit, enviado via Pix. Crédito só no Plano Fênix (parcelado em 6x) e apenas se o aluno pedir. Depois que o link é pago, o contrato chega por e-mail ou WhatsApp para a pessoa ler e assinar.",
+    groups: [{ title: null, items: [
+      { title: "1 · Coletar os dados (adulto)", tag: "Compromisso e Coerência",
+        note: "Enviar assim que a pessoa escolher o plano.",
+        bubbles: [
+`Perfeito! Pra gente finalizar sua matrícula só vou precisar confirmar algumas informações com você pra finalizar seu cadastro e mandar o link de acerto:
+
+- Nome Completo
+- Data de Nascimento
+- CPF
+- Endereço
+- CEP
+- E-mail.
+
+Pode me mandar por aqui mesmo? 🙏✨`
+        ]},
+      { title: "1 · Coletar os dados (menor de idade)", tag: "Compromisso e Coerência",
+        note: "Para alunas crianças e juvenis. Os dados do cadastro incluem o responsável.",
+        bubbles: [
+`Perfeito! Já vou colocar você no grupo e fazer a matrícula da [Aluna], antes só preciso fazer o cadastro dela, pra isso só preciso confirmar alguns dados com você:
+
+- Nome Completo da Aluna
+- Data de Nascimento da Aluna
+- Nome completo do responsável
+- Contato do Responsável
+- Data de Nascimento do Responsável
+- CPF
+- Endereço
+- CEP
+- E-mail
+
+Pode me mandar por aqui mesmo? 🙏✨`
+        ]},
+      { title: "2 · Enviar o link: Plano Fênix", tag: "Compromisso e Coerência",
+        note: "Troque o plano e a frequência (1x ou 2x na semana) conforme a escolha da pessoa.",
+        bubbles: [
+`Link para o fechamento da sua matrícula, 🐦‍🔥 Plano Fênix (Semestral) 2x semana:
+
+[Link]
+
+Quando concluir vai chegar pelo e-mail/whatsapp o contrato pra você ler e assinar, consegue me confirmar quando assinar?`
+        ]},
+      { title: "2 · Enviar o link: Plano Fogo", tag: "Compromisso e Coerência",
+        note: "Troque o plano e a frequência (1x ou 2x na semana) conforme a escolha da pessoa.",
+        bubbles: [
+`Link para o fechamento da sua matrícula, 🔥 Plano Fogo (Trimestral) 2x semana:
+
+[Link]
+
+Quando concluir vai chegar pelo e-mail/whatsapp o contrato pra você ler e assinar, consegue me confirmar quando assinar?`
+        ]},
+      { title: "3 · Boas-vindas (depois da assinatura)", tag: "Unidade",
+        note: "Sem localização, porque a pessoa já veio à experimental. A última mensagem só entra se existir grupo para a turma.",
+        bubbles: [
+`Perfeito, seja muito bem-vinda à família 💜`,
+`Te esperamos na [dia da semana] às [horário] para a sua primeira aula de [modalidade] como aluna da Ignus com o(a) [professor]! 🔥`,
+`Já te coloquei no grupo da turma, lá você acompanha os avisos e conhece o pessoal 💜`
+        ]}
+    ]}]
+  },
+
+  /* =====================================================
+     5. OBJEÇÕES
+  ===================================================== */
+  {
+    id: "objecoes", icon: "🛡️", title: "Objeções",
+    intro: "Estrutura de toda resposta: (1) acolher a objeção, sem discutir; (2) devolver algo que a pessoa disse ou viveu; (3) dar um próximo passo pequeno. Nunca fale mal de outra escola. Use só o que for verdade.",
+    groups: [
+
+      /* ---------- ANTES DA EXPERIMENTAL ---------- */
+      { title: "Antes da experimental · “Sem tempo”", short: "Sem tempo",
+        note: "A pessoa ainda não veio à aula e os horários já foram enviados. Por isso, nenhuma resposta termina com “posso te mandar os horários?”.",
+        items: [
+        { title: "A · Compromisso mínimo", tag: "Contraste",
+          note: "Torna o pedido pequeno: é só 1 hora.",
+          bubbles: [
+`Entendo, [nome] 💜 É só 1 hora, sem compromisso nenhum: você vem, sente a aula e depois decide com calma. Qual desses horários é o menos corrido pra você? ✨`
+          ]},
+        { title: "B · Descobrir o melhor horário", tag: "Compromisso e Coerência",
+          note: "A conversa passa de “não tenho tempo” para “qual horário”.",
+          bubbles: [
+`Super entendo, [nome] 💜 Me conta: qual dia ou horário costuma ser mais tranquilo na sua semana? Assim eu vejo qual dessas turmas encaixa melhor ✨`
+          ]},
+        { title: "C · Sábado com vaga", tag: "Escassez",
+          note: "Só use com vaga real.",
+          bubbles: [
+`Entendo, [nome] 💜 Entre os horários que te mandei, os de sábado costumam ser os mais tranquilos pra quem tem a semana cheia: [modalidade e horário]. Posso reservar uma vaga pra você? ✨`
+          ]},
+        { title: "D · A aula como pausa", tag: "Unidade",
+          note: "Só use se for verdade para a turma.",
+          bubbles: [
+`Entendo demais, [nome] 💜 Muita gente chega com a rotina corrida, e é por isso que a aula vira o momento de desacelerar e fazer algo por si 😊 É só 1 hora, e você sente na prática. Quer que eu deixe uma vaga reservada pra você em algum desses horários? ✨`
+          ]},
+        { title: "E · Deixar a porta aberta", tag: "Compromisso e Coerência",
+          note: "Para quem realmente não tem tempo agora. Você ganha a permissão de voltar a falar.",
+          bubbles: [
+`Sem problemas, [nome] 💜 Quando costuma ficar mais tranquilo pra você? Posso te chamar nessa época pra ver se tem um horário que encaixa ✨`
+          ]}
+      ]},
+
+      /* ---------- DEPOIS DA EXPERIMENTAL ---------- */
+      { title: "Depois da experimental · “Vou pensar”", short: "Vou pensar",
+        note: "Quase sempre esconde outra objeção. Descubra qual é.",
+        items: [
+        { title: "A · Descobrir o que pesa", tag: "Compromisso e Coerência",
+          bubbles: [
+`Claro, [nome]! 💜 Me conta o que está pesando mais pra você: o valor, o horário ou outra coisa? Assim eu te ajudo a decidir com calma ✨`
+          ]},
+        { title: "B · Lembrar a experiência", tag: "Afeição · Unidade",
+          bubbles: [
+`Claro! 😊 Só lembrando que na aula você [destaque do professor], e o [professor] já comentou que a turma gostou de te ver por lá. Se quiser, te mando as opções de plano de novo pra facilitar a decisão 💜`
+          ]},
+        { title: "C · Isenção com prazo", tag: "Escassez",
+          note: "A isenção só vale no prazo combinado. Não estenda.",
+          bubbles: [
+`Claro, [nome]! 💜 Só te aviso que a isenção da taxa de matrícula vale até hoje à noite. Se precisar de mais tempo, me avisa que a gente conversa 🔥`
+          ]}
+      ]},
+
+      { title: "Depois da experimental · “Tá caro”", short: "Tá caro",
+        note: "Para dividir por aula, considere cerca de 8 aulas por mês no 2x na semana e cerca de 4 aulas por mês no 1x na semana.",
+        items: [
+        { title: "1 · Valor por aula (2x na semana)", tag: "Contraste",
+          bubbles: [
+`Entendo, [nome] 💜 Pra comparar: no Plano Fênix 2x na semana são cerca de 8 aulas no mês, o que dá uns R$33 por aula. No Mensal 2x, são uns R$41 por aula 🔥 Quer que eu te explique como funciona?`
+          ]},
+        { title: "2 · Valor por aula (1x na semana)", tag: "Contraste",
+          bubbles: [
+`Entendo, [nome] 💜 Pra comparar: no Plano Fênix 1x na semana são cerca de 4 aulas no mês, o que dá uns R$50 por aula. No Mensal 1x, são uns R$65 por aula 🔥 Quer que eu te explique como funciona?`
+          ]},
+        { title: "3 · Descobrir o que cabe", tag: "Compromisso e Coerência",
+          note: "Use o número que ela disser para escolher entre 1x ou 2x e entre os planos, não para dar desconto.",
+          bubbles: [
+`Super entendo, [nome] 💜 Me conta uma coisa: qual valor por mês fica confortável pra você? Assim eu vejo qual plano encaixa melhor sem apertar o seu orçamento ✨`
+          ]},
+        { title: "4 · Plano mais em conta", tag: "Ancoragem",
+          bubbles: [
+`Entendo, [nome] 💜 Uma dica: o Plano Fênix 1x na semana sai por R$198 por mês, R$62 a menos que o Mensal. Em 6 meses são R$372 de diferença 🐦‍🔥 Quer que eu te explique como funciona?`
+          ]},
+        { title: "5 · Crédito no Fênix", tag: "Menos atrito",
+          note: "O crédito é parcelado em 6x e vale só para o Plano Fênix.",
+          bubbles: [
+`Entendo, [nome] 💜 Se ajudar, o Plano Fênix também pode ser parcelado em 6x no cartão de crédito, aí fica mais tranquilo de encaixar no mês. Quer que eu te explique como funciona? ✨`
+          ]}
+      ]},
+
+      { title: "Depois da experimental · “Preciso ver com alguém”", short: "Ver com alguém",
+        note: "Em turmas juvenis, quem decide costuma ser o responsável. Troque [pessoa] pelo que a própria pessoa disse (marido, pais, namorado...).",
+        items: [
+        { title: "A · Facilitar a conversa", tag: "Reciprocidade",
+          bubbles: [
+`Claro, [nome] 💜 Pra te ajudar nessa conversa, posso te mandar um resumo com o plano, os valores e os horários? Assim fica fácil de mostrar pra [pessoa] ✨`
+          ]},
+        { title: "B · Devolver a experiência dela", tag: "Compromisso e Coerência",
+          bubbles: [
+`Claro! 😊 Na aula você [destaque do professor] e comentou que [frase dela do feedback]. Pode contar isso pra [pessoa], porque é o que faz a diferença 💜 Se ela(e) quiser tirar alguma dúvida direto comigo, é só me chamar ✨`
+          ]},
+        { title: "C · Falar direto com quem decide", tag: "Autoridade",
+          bubbles: [
+`Claro, [nome]! 💜 Se ajudar, posso explicar o funcionamento direto pra [pessoa], é rapidinho. Me passa o contato dela(e) ou pede pra me chamar por aqui 😊`
+          ]},
+        { title: "D · Combinar o retorno", tag: "Compromisso e Coerência",
+          bubbles: [
+`Combinado, [nome] 💜 Que horas você acha que consegue conversar com [pessoa]? Eu te chamo depois pra saber como foi ✨`
+          ]},
+        { title: "E · Prazo da isenção", tag: "Escassez",
+          note: "Só use se a vaga puder mesmo ficar guardada.",
+          bubbles: [
+`Claro! 💜 Se conseguir conversar ainda hoje, a isenção da taxa de matrícula vale até a noite e eu já deixo sua vaga guardada 🔥 Me conta o que ficou combinado por aqui?`
+          ]}
+      ]},
+
+      { title: "Depois da experimental · “Vou ver outras escolas”", short: "Outras escolas",
+        note: "Respeite a comparação e nunca fale mal de outra escola. Os eventos mudam: atualize os nomes nas opções B1 e B2 todo mês.",
+        items: [
+        { title: "A · A experiência como critério", tag: "Compromisso e Coerência",
+          bubbles: [
+`Faz total sentido comparar, [nome] 💜 Me conta: o que você sentiu na nossa aula que quer encontrar na escola que escolher? ✨`
+          ]},
+        { title: "B1 · Autoridade e programação", tag: "Autoridade · Aprovação social",
+          note: "Todos os professores têm pelo menos 10 anos de dança, com palco, eventos e competições. Troque os eventos pelos que estiverem valendo.",
+          bubbles: [
+`Super válido, [nome] 💜 O que a gente tem de diferente é que aqui você dança com professores que têm pelo menos 10 anos de dança, com palco, eventos e competições no currículo 🔥 E a escola vai além da aula: tem Halloween este mês, workshop com o Ítalo Ramos em novembro e um luau com aula na praia em janeiro ✨ Qual desses te anima mais? 😊`
+          ]},
+        { title: "B2 · O filme de dança", tag: "Unidade",
+          note: "Vende a identidade em vez do serviço. Troque os eventos pelos que estiverem valendo.",
+          bubbles: [
+`Super válido, [nome] 💜 Aqui a ideia é que, quando você entra na sala, o resto fica lá fora e a vida acontece ali dentro. E isso vai além da aula: Halloween, workshop com o Ítalo Ramos, luau com aula na praia, e a chance de participar de videoclipes e apresentações 🔥 Qual desses te anima mais? ✨`
+          ]},
+        { title: "C · Facilitar a comparação", tag: "Reciprocidade",
+          bubbles: [
+`Claro, [nome]! 💜 Se ajudar, te mando um resumo do que está incluso, dos horários e dos planos, pra você comparar lado a lado ✨`
+          ]},
+        { title: "D · Respeito com prazo", tag: "Escassez",
+          note: "Só use se a vaga puder mesmo ficar guardada.",
+          bubbles: [
+`Super válido, [nome] 💜 Compara com calma. Só te aviso que a isenção da taxa de matrícula vale até a noite de hoje e a vaga fica guardada pra você 🔥 Qualquer dúvida, me chama que respondo na hora ✨`
+          ]}
+      ]}
+    ]
+  }
+];
+
+/* ---------- estado ---------- */
+let activeChip = "todas";
+let activeGroup = null;
+let studyMode = false;
+let copyCount = 0;
+const RAW = {};
+
+/* ids estáveis para cada balão */
+(function assignIds(){
+  let n = 0;
+  DATA.forEach(sec => sec.groups.forEach(g => g.items.forEach(it => {
+    it.ids = it.bubbles.map(b => { const id = "b" + (n++); RAW[id] = b; return id; });
+  })));
+})();
+
+function esc(s){
+  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function formatBubble(text){
+  return esc(text).replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>');
+}
+
+/* ---------- chips ---------- */
+function buildChips(){
+  const all = [{id:"todas", icon:"✨", title:"Todas"}].concat(DATA.map(s => ({id:s.id, icon:s.icon, title:s.title})));
+  document.getElementById('chips').innerHTML = all.map(c =>
+    `<div class="chip ${activeChip===c.id?'active':''}" onclick="setChip('${c.id}')">${c.icon} ${esc(c.title)}</div>`
+  ).join('');
+  buildSubChips();
+}
+function buildSubChips(){
+  const el = document.getElementById('subchips');
+  const sec = DATA.find(s => s.id === activeChip);
+  if(!sec || sec.groups.filter(g => g.title).length < 2){ el.innerHTML = ''; return; }
+  let html = `<div class="chip ${activeGroup===null?'active':''}" onclick="setGroup(null)">Todas</div>`;
+  sec.groups.forEach((g, gi) => {
+    html += `<div class="chip ${activeGroup===gi?'active':''}" onclick="setGroup(${gi})">${esc(g.short || g.title)}</div>`;
+  });
+  el.innerHTML = html;
+}
+function setChip(id){ activeChip = id; activeGroup = null; buildChips(); renderAll(); window.scrollTo({top:0, behavior:'smooth'}); }
+function setGroup(gi){ activeGroup = gi; buildSubChips(); renderAll(); }
+
+function toggleStudy(){
+  studyMode = !studyMode;
+  document.getElementById('studySwitch').classList.toggle('on', studyMode);
+  renderAll();
+}
+
+function matches(text, q){ return text.toLowerCase().includes(q); }
+
+/* ---------- render ---------- */
+function cardHtml(it){
+  let h = `<div class="card ${studyMode?'study':''}">
+    <div class="card-top">
+      <p class="card-title">${esc(it.title)}</p>
+      ${it.tag ? `<span class="tag">${esc(it.tag)}</span>` : ''}
+    </div>
+    ${it.note ? `<p class="note">${esc(it.note)}</p>` : ''}`;
+  it.bubbles.forEach((b, bi) => {
+    const id = it.ids[bi];
+    h += `<div class="bubble-row">
+      <div class="bubble" id="bub-${id}" onclick="revealBubble('${id}')">
+        ${formatBubble(b)}
+        <div class="copy-fab" onclick="event.stopPropagation(); copyBubble('${id}', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E6007A" stroke-width="2.4"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+        </div>
+      </div>
+    </div>`;
+  });
+  return h + `</div>`;
+}
+
+function renderAll(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let html = '';
+  let totalShown = 0;
+
+  DATA.forEach(sec => {
+    if(activeChip !== 'todas' && activeChip !== sec.id) return;
+
+    let body = '';
+    let secCount = 0;
+
+    sec.groups.forEach((g, gi) => {
+      if(activeChip !== 'todas' && activeGroup !== null && activeGroup !== gi) return;
+      const items = g.items.filter(it => {
+        if(!q) return true;
+        const head = [g.title || '', it.title, it.tag || '', it.note || ''].join(' ');
+        return matches(head, q) || it.bubbles.some(b => matches(b, q));
+      });
+      if(items.length === 0) return;
+      secCount += items.length;
+      if(g.title){
+        body += `<div class="group-head"><h3>${esc(g.title)}</h3>${g.note ? `<p>${esc(g.note)}</p>` : ''}</div>`;
+      }
+      items.forEach(it => { body += cardHtml(it); });
+    });
+
+    if(secCount === 0) return;
+    totalShown += secCount;
+    html += `<div class="section">
+      <div class="section-head">
+        <div class="icon">${sec.icon}</div>
+        <h2>${esc(sec.title)}</h2>
+        <span class="count">· ${secCount}</span>
+      </div>
+      ${sec.intro && !q ? `<div class="intro">${esc(sec.intro)}</div>` : ''}
+      ${body}
+    </div>`;
+  });
+
+  if(totalShown === 0){
+    html = `<div class="empty"><div class="big">🔎</div>Nenhuma mensagem encontrada.<br>Tenta buscar por outra palavra.</div>`;
+  }
+  document.getElementById('content').innerHTML = html;
+}
+
+/* ---------- interações ---------- */
+function revealBubble(id){
+  if(!studyMode) return;
+  const el = document.getElementById('bub-' + id);
+  if(el) el.classList.add('revealed');
+}
+
+function copyBubble(id, fabEl){
+  const text = RAW[id];
+  const doCopy = () => {
+    copyCount++;
+    document.getElementById('copyCount').textContent = copyCount;
+    fabEl.classList.add('done');
+    fabEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    showToast('Copiado! Cole no WhatsApp ✅');
+    setTimeout(() => {
+      fabEl.classList.remove('done');
+      fabEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="#E6007A" stroke-width="2.4"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>';
+    }, 1400);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(doCopy).catch(() => fallbackCopy(text, doCopy));
+  } else {
+    fallbackCopy(text, doCopy);
+  }
+}
+function fallbackCopy(text, cb){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ showToast('Não consegui copiar automaticamente.'); }
+  document.body.removeChild(ta);
+}
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+buildChips();
+renderAll();
+</script>
+</body>
+</html>
